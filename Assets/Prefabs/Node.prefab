@@ -188,10 +188,9 @@ MonoBehaviour:
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   visitedColor: {r: 0.3584906, g: 0.32297972, b: 0.3522469, a: 1}
   stackColor: {r: 0.7735849, g: 0.3247597, b: 0.3247597, a: 1}
-  startColor: {r: 0.13656996, g: 0.6804889, b: 0.8773585, a: 1}
-  endColor: {r: 0.38708463, g: 0.6792453, b: 0.3236027, a: 1}
+  startColor: {r: 0.13656996, g: 0.6804889, b: 0.8773585, a: 0.64705884}
+  endColor: {r: 0.38708463, g: 0.6792453, b: 0.3236027, a: 0.64705884}
   spriteRenderer: {fileID: 2855284571252338105}
-  neighbors: []
   wallTop: {fileID: 2855284572752546069}
   wallRight: {fileID: 2855284573214707575}
   wallBottom: {fileID: 2855284571211622069}

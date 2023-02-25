@@ -6,13 +6,18 @@ public class Node : MonoBehaviour {
 
     [SerializeField] private Color baseColor, visitedColor, stackColor, startColor, endColor;
     [SerializeField] private SpriteRenderer spriteRenderer;
-    private bool visited;
-    public List<Node> neighbors;
 
-    public GameObject wallTop;
-    public GameObject wallRight;
-    public GameObject wallBottom;
-    public GameObject wallLeft;
+    [SerializeField] private GameObject wallTop;
+    [SerializeField] private GameObject wallRight;
+    [SerializeField] private GameObject wallBottom;
+    [SerializeField] private GameObject wallLeft;
+
+    private bool visited;
+    private List<Node> neighbors;
+
+    public void SetBaseColor() {
+        spriteRenderer.color = baseColor;
+    }
 
     public void SetStartColor() {
         spriteRenderer.color = startColor;
@@ -38,7 +43,14 @@ public class Node : MonoBehaviour {
         return visited;
     }
 
-    public void removeWalls(Node other) {
+    public void AddWalls() {
+        wallTop.SetActive(true);
+        wallRight.SetActive(true);
+        wallBottom.SetActive(true);
+        wallLeft.SetActive(true);
+    }
+
+    public void RemoveWalls(Node other) {
         int x = (int)(this.transform.position.x - other.transform.position.x);
         int y = (int)(this.transform.position.y - other.transform.position.y);
 
@@ -61,21 +73,21 @@ public class Node : MonoBehaviour {
     }
 
     public void GetNeighbors(GameObject[,] grid, int x, int y) {
-        neighbors = new List<Node>();
 
+        neighbors = new List<Node>();
 
         // top neighbor
         try {
             neighbors.Add(grid[x, y + 1].GetComponent<Node>());
         } catch {
-            // Debug.Log("no top neighbor");
+            Debug.Log("no top neighbor");
         }
 
         // right neighbor
         try {
             neighbors.Add(grid[x + 1, y].GetComponent<Node>());
         } catch {
-            // Debug.Log("no right neighbor");
+            Debug.Log("no right neighbor");
         }
 
 
@@ -83,14 +95,14 @@ public class Node : MonoBehaviour {
         try {
             neighbors.Add(grid[x, y - 1].GetComponent<Node>());
         } catch {
-            // Debug.Log("no bottom neighbor");
+            Debug.Log("no bottom neighbor");
         }
 
         // left neighbor
         try {
             neighbors.Add(grid[x - 1, y].GetComponent<Node>());
         } catch {
-            // Debug.Log("no left neighbor");
+            Debug.Log("no left neighbor");
         }
 
     }
