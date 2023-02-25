@@ -10,72 +10,21 @@ public class Grid : MonoBehaviour {
 
     private const int WIDTH = 25;
     private const int HEIGHT = 25;
-    public GameObject[,] grid = new GameObject[WIDTH, HEIGHT];
-
-    Node current;
-    Stack mazeGeneratorStack;
-
+    private GameObject[,] grid = new GameObject[WIDTH, HEIGHT];
+    private MazeGenerator mazeGenerator;
 
     void Start() {
+
         CreateGrid();
-        StartCoroutine("MazeGenerator");
+        mazeGenerator = new MazeGenerator(grid);
+    }
+
+    public void IterativeDFS() {
+        StartCoroutine(mazeGenerator.IterativeDFS());
     }
 
 
-    /*         
-
-        https://en.wikipedia.org/wiki/Maze_generation_algorithm
-
-        1. Make the initial cell the current cell and mark it as visited
-        2. While there are unvisited cells
-            1. If the current cell has any neighbours which have not been visited
-                1. Choose randomly one of the unvisited neighbours
-                2. Push the current cell to the stack
-                3. Remove the wall between the current cell and the chosen cell
-                4. Make the chosen cell the current cell and mark it as visited
-            2. Else if stack is not empty
-                1. Pop a cell from the stack
-                2. Make it the current cell 
-    */
-    IEnumerator MazeGenerator() {
-
-        mazeGeneratorStack = new Stack();
-
-        current = grid[0, 0].GetComponent<Node>();
-        current.SetVisited(true);
-        current.SetStartColor();
-
-        while (UnvisitedNodesLeft()) {
-
-            current.SetVisitedColor();
-            current.SetVisited(true);
-
-            List<Node> unvisitedNeighbors = current.GetUnvisitedNeighbors();
-
-            if (unvisitedNeighbors.Count > 0) {
-                Node next = unvisitedNeighbors[Random.Range(0, unvisitedNeighbors.Count)];
-                mazeGeneratorStack.Push((Node)current);
-
-                current.removeWalls(next);
-
-                next.SetVisited(true);
-                current = next;
-            } else if (mazeGeneratorStack.Count > 0) {
-                current = (Node)mazeGeneratorStack.Pop();
-                current.SetStackColor();
-            }
-
-            yield return new WaitForSeconds(.01f);
-        }
-
-        current.SetVisitedColor();
-        grid[0, 0].GetComponent<Node>().SetStartColor();
-        grid[WIDTH - 1, HEIGHT - 1].GetComponent<Node>().SetEndColor();
-
-    }
-
-
-    void CreateGrid() {
+    private void CreateGrid() {
 
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) {
@@ -101,14 +50,19 @@ public class Grid : MonoBehaviour {
     }
 
 
-    private bool UnvisitedNodesLeft() {
-        for (int x = 0; x < WIDTH; x++) {
-            for (int y = 0; y < HEIGHT; y++) {
-                if (!grid[x, y].GetComponent<Node>().GetVisited() == true) {
-                    return true;
+    public void ResetGrid() {
+
+        if (!mazeGenerator.isRunning) {
+
+            for (int x = 0; x < WIDTH; x++) {
+                for (int y = 0; y < HEIGHT; y++) {
+                    grid[x, y].GetComponent<Node>().SetVisited(false);
+                    grid[x, y].GetComponent<Node>().SetBaseColor();
+                    grid[x, y].GetComponent<Node>().AddWalls();
+
                 }
             }
         }
-        return false;
+
     }
 }
