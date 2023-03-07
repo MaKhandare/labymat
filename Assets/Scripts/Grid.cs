@@ -20,7 +20,9 @@ public class Grid : MonoBehaviour {
     }
 
     public void IterativeDFS() {
-        StartCoroutine(mazeGenerator.IterativeDFS());
+        if (!mazeGenerator.isRunning) {
+            StartCoroutine(mazeGenerator.IterativeDFS());
+        }
     }
 
 
@@ -62,6 +64,9 @@ public class Grid : MonoBehaviour {
 
                 }
             }
+
+            mazeGenerator.goalX = Random.Range(0, grid.GetLength(0) - 1);
+            mazeGenerator.goalY = Random.Range(0, grid.GetLength(1) - 1);
         }
 
     }
