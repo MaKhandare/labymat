@@ -9,6 +9,9 @@ public class MazeGenerator {
     private GameObject[,] grid;
     private float waitDelay;
 
+    public int goalX;
+    public int goalY;
+
     public bool isRunning;
 
     public MazeGenerator(GameObject[,] grid) {
@@ -16,10 +19,10 @@ public class MazeGenerator {
         this.grid = grid;
         waitDelay = 0.01f;
         isRunning = false;
+
+        goalX = Random.Range(0, grid.GetLength(0) - 2);
+        goalY = Random.Range(0, grid.GetLength(1) - 2);
     }
-
-
-
 
 
 
@@ -28,16 +31,16 @@ public class MazeGenerator {
 
         https://en.wikipedia.org/wiki/Maze_generation_algorithm
 
-        1. Make the initial cell the current cell and mark it as visited
-        2. While there are unvisited cells
-            1. If the current cell has any neighbours which have not been visited
+        1. Make the initial node the current node and mark it as visited
+        2. While there are unvisited nodes
+            1. If the current nodes has any neighbours which have not been visited
                 1. Choose randomly one of the unvisited neighbours
-                2. Push the current cell to the stack
-                3. Remove the wall between the current cell and the chosen cell
-                4. Make the chosen cell the current cell and mark it as visited
+                2. Push the current node to the stack
+                3. Remove the wall between the current node and the chosen node
+                4. Make the chosen node the current node and mark it as visited
             2. Else if stack is not empty
-                1. Pop a cell from the stack
-                2. Make it the current cell 
+                1. Pop a node from the stack
+                2. Make it the current node 
     */
     public IEnumerator IterativeDFS() {
 
@@ -70,9 +73,12 @@ public class MazeGenerator {
             yield return new WaitForSeconds(waitDelay);
         }
 
+        // set color for last visited node
         current.SetVisitedColor();
+        
+        // highlight starting and end nodes
         grid[0, 0].GetComponent<Node>().SetStartColor();
-        grid[grid.GetLength(0) - 1, grid.GetLength(1) - 1].GetComponent<Node>().SetEndColor();
+        grid[goalX, goalY].GetComponent<Node>().SetEndColor();
 
         isRunning = false;
     }
